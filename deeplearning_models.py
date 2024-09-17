@@ -1,7 +1,8 @@
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
-from tensorflow.keras.layers import Conv2D, Input, Dense, MaxPooling2D, BatchNormalization, GlobalAveragePooling2D
+from tensorflow.keras.layers import Conv2D, Input, Dense, MaxPooling2D, BatchNormalization, GlobalAveragePooling2D, Flatten
+from tensorflow.keras import Model
 
 
 # Functional approach: function that returns a model
@@ -24,10 +25,10 @@ def functional_model():
 # Tensorflow.keras.Model : inherit from this class
 class MyCustomModel(tf.keras.Model):
         
-    def __init__(self):
+    def __init__(self, K1, K2):
         super().__init__()
-        self.conv1 = Conv2D(32, (3,3), activation='relu')
-        self.conv2 = Conv2D(64, (3,3), activation='relu')
+        self.conv1 = Conv2D(32, K1, activation='relu')# passing in K1 isntead of 3,3
+        self.conv2 = Conv2D(64, K2, activation='relu')
         self.maxpool1 = MaxPooling2D()
         self.batchnorm1 = BatchNormalization()
 
@@ -54,5 +55,35 @@ class MyCustomModel(tf.keras.Model):
         x = self.dense2(x)
 
         return x
+    
+
+def streetsigns_model(nbr_classes):
+
+    my_input = Input(shape=(60,60,3))
+
+    x = Conv2D(32, (3, 3), activation='relu')(my_input)
+    x = MaxPooling2D()(x)
+    x = BatchNormalization()(x)
+
+    x = Conv2D(64, (3, 3), activation='relu')(x)
+    x = MaxPooling2D()(x)
+    x = BatchNormalization()(x)
+
+    x = Conv2D(128, (3, 3), activation='relu')(x)
+    x = MaxPooling2D()(x)
+    x = BatchNormalization()(x)
+
+    # x = Flatten()(x)
+    x = GlobalAveragePooling2D()(x)
+    x = Dense(64, activation='relu')(x)
+    x = Dense(nbr_classes, activation='relu')(x)
+
+    return Model(inputs=my_input, outputs=x)
+
+if __name__ =='__main__':
+
+    model = streetsigns_model(10)
+    model.summary()
+
 
 

@@ -33,7 +33,7 @@ if __name__ == '__main__':
     batch_size = 64
     epochs = 3
 
-    pdb.set_trace()
+    # pdb.set_trace()
     # Create data generators
     train_generator, val_generator, test_generator = create_generators(batch_size, path_to_train, path_to_val, path_to_test)
     nbr_classes = train_generator.num_classes

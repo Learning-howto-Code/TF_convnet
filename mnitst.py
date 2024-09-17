@@ -42,7 +42,7 @@ if __name__ == '__main__':
     y_test = tf.keras.utils.to_categorical(y_test, 10)
 
     # model = functional_model()
-    model = MyCustomModel()
+    model = MyCustomModel((4,4),(5,5))
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
  
     # Model Training
