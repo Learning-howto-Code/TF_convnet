@@ -8,7 +8,7 @@ import csv, pdb
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-
+#comment for git
 def display_some_examples(examples, labels):
 
     
