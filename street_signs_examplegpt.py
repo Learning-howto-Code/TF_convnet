@@ -9,6 +9,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from my_utils import create_generators, split_data
 from deeplearning_models import streetsigns_model
 import pdb
+import tensorflow as tf
 
 
 
@@ -31,12 +32,20 @@ if __name__ == '__main__':
     path_to_val = '/Users/jakehopkins/Downloads/German Traffic Signs Dataset/training_data/val'
     path_to_test = '/Users/jakehopkins/Downloads/German Traffic Signs Dataset/Test'
     batch_size = 64
-    epochs = 3
+    epochs = 1
 
     # pdb.set_trace()
     # Create data generators
     train_generator, val_generator, test_generator = create_generators(batch_size, path_to_train, path_to_val, path_to_test)
     nbr_classes = train_generator.num_classes
+
+TRAIN = True # changes if training will commense
+TEST = False
+
+if TRAIN:
+
+
+
 
     path_to_save_model = './Models'
     if not os.path.exists(path_to_save_model):
@@ -48,7 +57,7 @@ if __name__ == '__main__':
         mode='max',
         save_best_only=True,
         save_freq='epoch',
-        verbose=1
+        verbose=1   
     )
 
     early_stop = EarlyStopping(monitor="val_accuracy", patience=10)
@@ -57,9 +66,17 @@ if __name__ == '__main__':
 
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-    model.fit(
-        train_generator,
+    model.fit(train_generator,
         epochs=epochs,
         validation_data=val_generator,
         callbacks=[ckpt_saver, early_stop]
     )
+
+if TEST == True: # Doesn't work
+    model = tf.keras.models.load_model('./Models')
+    model.summary()
+
+    print("Evaluating Val. set")
+    model.evaluate(val_generator)
+    print("evaluating test set")
+    model.evaluate(test_generator)
